@@ -1,13 +1,12 @@
 ;; Visual
 
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-
 (setq modus-themes-italic-constructs t
       modus-themes-bold-constructs t
       modus-themes-fringes 'subtle)
+(load-theme 'modus-vivendi)
 
-;;(load-theme 'modus-vivendi)
-(load-theme 'flatland t)
+;; (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+;; (load-theme 'flatland t)
 
 (column-number-mode t)
 (menu-bar-mode 0)
@@ -17,13 +16,29 @@
 (tool-bar-mode 0)
 (tooltip-mode 0)
 
-;(setq default-frame-alist '((undecorated . t)))
+(setq default-frame-alist '((undecorated . t)))
 (setq inhibit-startup-message t)
 (setq visible-bell t)
 
-;(add-to-list 'initial-frame-alist '(fullscreen . maximized))
+(add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 ;; Behavior
+
+(setq bookmark-save-flag 1)
+(setq custom-file null-device)
+(setq kill-whole-line 1)
+(setq tab-width 2)
+
+(setq-default indent-tabs-mode nil)
+
+(global-auto-revert-mode t)
+(global-set-key (kbd "<escape>") 'keyboard-quit)
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+(global-set-key (kbd "C-c p") 'previous-buffer)
+(global-set-key (kbd "C-c n") 'next-buffer)
+(savehist-mode t)
+
+;; dired
 
 (with-eval-after-load 'dired
   (require 'dired-x)
@@ -33,30 +48,22 @@
   (setq dired-kill-when-opening-new-dired-buffer t)
   (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")))
 
-(global-auto-revert-mode t)
-(savehist-mode t)
+;; Lisp
+
+(setq common-lisp-style-default "basic")
+(setq inferior-lisp-program "sbcl")
+
+;; Backups
 
 (setq auto-save-timeout 5)
 (setq backup-by-copying t)
 (setq backup-directory-alist
       `(("." . ,(concat user-emacs-directory "backups"))))
-(setq bookmark-save-flag 1)
-(setq common-lisp-style-default "basic")
-(setq custom-file null-device)
 (setq delete-old-versions t)
-(setq inferior-lisp-program "sbcl")
 (setq kept-new-versions 10)
 (setq kept-old-versions 0)
-(setq tab-width 2)
 (setq vc-make-backup-files t)
 (setq version-control t)
-
-(setq-default indent-tabs-mode nil)
-
-(global-set-key (kbd "<escape>") 'keyboard-quit)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-(global-set-key (kbd "C-c p") 'previous-buffer)
-(global-set-key (kbd "C-c n") 'next-buffer)
 
 ;; Packages
 
@@ -128,9 +135,10 @@
 (use-package which-key
   :defer 0
   :diminish which-key-mode
+  :bind (("C-h C-b" . which-key-show-top-level))
   :config
   (which-key-mode)
-  (setq which-key-idle-delay 1))
+  (setq which-key-idle-delay 0.5))
 
 (use-package tree-sitter
   :config
@@ -174,3 +182,9 @@
   :mode (("\\.yml\\'" . yaml-mode)))
 
 (use-package sql-indent)
+
+(use-package magit
+  :bind (("C-c g" . magit-file-dispatch))
+  :config
+  (magit-wip-mode)
+  (setq magit-diff-refine-hunk 'all))

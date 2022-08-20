@@ -43,7 +43,7 @@
 (with-eval-after-load 'dired
   (require 'dired-x)
   (add-hook 'dired-mode-hook 'dired-hide-details-mode)
-  (add-hook 'dired-mode-hook 'dired-omit-mode)
+  ;; (add-hook 'dired-mode-hook 'dired-omit-mode)
   (define-key dired-mode-map [mouse-2] 'dired-find-file)
   (setq dired-kill-when-opening-new-dired-buffer t)
   (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")))
@@ -109,7 +109,8 @@
   :demand
   :diminish counsel-mode
   :diminish ivy-mode
-  :bind (("C-c s" . swiper)
+  :bind (("C-c f" . counsel-git)
+         ("C-c s" . swiper)
 	 ("C-x C-r" . counsel-recentf))
   :config
   (setq ivy-height 15)

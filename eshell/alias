@@ -1,0 +1,2 @@
+alias pnpm pnpm --color $*
+alias ll ls -l $*

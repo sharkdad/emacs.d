@@ -5,4 +5,5 @@
 !early-init.el
 !init.el
 
+!eshell/alias
 !themes/

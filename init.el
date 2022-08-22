@@ -25,10 +25,12 @@
 ;; Behavior
 
 (setq bookmark-save-flag 1)
+(setq completion-ignore-case t)
 (setq custom-file null-device)
 (setq kill-whole-line 1)
 (setq tab-width 2)
 
+(setq-default buffer-file-coding-system 'utf-8-unix)
 (setq-default indent-tabs-mode nil)
 
 (global-auto-revert-mode t)
@@ -36,6 +38,7 @@
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (global-set-key (kbd "C-c p") 'previous-buffer)
 (global-set-key (kbd "C-c n") 'next-buffer)
+(global-unset-key (kbd "C-h C-h"))
 (savehist-mode t)
 
 ;; dired
@@ -48,10 +51,14 @@
   (setq dired-kill-when-opening-new-dired-buffer t)
   (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$")))
 
-;; Lisp
+;; Languages
 
 (setq common-lisp-style-default "basic")
 (setq inferior-lisp-program "sbcl")
+
+(setq js-indent-level 2)
+(setq js-jsx-indent-level 2)
+(setq typescript-indent-level 2)
 
 ;; Backups
 
@@ -129,6 +136,7 @@
   :diminish
   :config
   (require 'smartparens-config)
+  (sp-pair "{" nil :post-handlers '(("||\n[i]" "RET")))
   (smartparens-global-mode t)
   (smartparens-global-strict-mode t)
   (sp-use-smartparens-bindings))
@@ -138,8 +146,10 @@
   :diminish which-key-mode
   :bind (("C-h C-b" . which-key-show-top-level))
   :config
-  (which-key-mode)
-  (setq which-key-idle-delay 0.5))
+  (setq which-key-show-early-on-C-h t)
+  (setq which-key-idle-delay 10000)
+  (setq which-key-idle-secondary-delay 0.05)
+  (which-key-mode))
 
 (use-package tree-sitter
   :config
@@ -170,6 +180,7 @@
 
 (use-package lsp-mode
   :init
+  (setq lsp-headerline-breadcrumb-enable nil)
   (setq lsp-keymap-prefix "C-c l")
   :hook ((typescript-mode . lsp-deferred))
   :commands lsp-deferred)
@@ -185,6 +196,7 @@
 (use-package sql-indent)
 
 (use-package magit
+  :defer 0
   :bind (("C-c g" . magit-file-dispatch))
   :config
   (magit-wip-mode)

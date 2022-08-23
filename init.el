@@ -13,6 +13,7 @@
 (scroll-bar-mode 0)
 (set-frame-font "Fira Code Retina-12" nil t)
 (set-fringe-mode 20)
+(tab-bar-mode 1)
 (tool-bar-mode 0)
 (tooltip-mode 0)
 

@@ -13,7 +13,6 @@
 (scroll-bar-mode 0)
 (set-frame-font "Fira Code Retina-12" nil t)
 (set-fringe-mode 20)
-(tab-bar-mode 1)
 (tool-bar-mode 0)
 (tooltip-mode 0)
 
@@ -21,7 +20,23 @@
 (setq inhibit-startup-message t)
 (setq visible-bell t)
 
+(tab-bar-mode 1)
+(setq tab-bar-close-button-show nil)
+(setq tab-bar-new-button-show nil)
+
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
+(defun adapt-font-size (&optional frame)
+  (let* ((attrs (frame-monitor-attributes frame))
+         (size (alist-get 'mm-size attrs))
+         (geometry (alist-get 'geometry attrs))
+         (ppmm (/ (* 1.0 (caddr geometry)) (car size)))
+         (height-mm (/ (frame-char-height) ppmm))
+         (height-pt (/ (face-attribute 'default :height frame) 10)))
+    (set-face-attribute 'default frame :height (* 10 (round 4 (/ height-mm height-pt))))))
+
+(add-function :after after-focus-change-function #'adapt-font-size)
+(add-hook 'after-make-frame-functions #'adapt-font-size)
 
 ;; Behavior
 
@@ -29,10 +44,10 @@
 (setq completion-ignore-case t)
 (setq custom-file null-device)
 (setq kill-whole-line 1)
-(setq tab-width 2)
 
 (setq-default buffer-file-coding-system 'utf-8-unix)
 (setq-default indent-tabs-mode nil)
+(setq-default tab-width 2)
 
 (global-auto-revert-mode t)
 (global-set-key (kbd "<escape>") 'keyboard-quit)
@@ -179,11 +194,14 @@
   (add-hook 'css-mode-hook (lambda () (tsi-css-mode 1)))
   (add-hook 'scss-mode-hook (lambda () (tsi-scss-mode 1))))
 
+(use-package go-mode)
+
 (use-package lsp-mode
   :init
   (setq lsp-headerline-breadcrumb-enable nil)
   (setq lsp-keymap-prefix "C-c l")
-  :hook ((typescript-mode . lsp-deferred))
+  :hook ((go-mode . lsp-deferred)
+         (typescript-mode . lsp-deferred))
   :commands lsp-deferred)
 
 (use-package lsp-ui
